@@ -17,10 +17,8 @@ interface TrashChartProps {
 }
 
 function getBarColor(score: number): string {
-  if (score >= 80) return "#ef4444"; // red
-  if (score >= 60) return "#f97316"; // orange
-  if (score >= 40) return "#eab308"; // yellow
-  return "#a3e635"; // lime
+  if (score >= 50) return "#ef4444"; // red
+  return "#003399"; // EU blue
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,27 +37,27 @@ function renderPlaque(props: any) {
         width={labelWidth}
         height={labelHeight}
         rx={6}
-        fill="#18181b"
-        stroke="#ef4444"
+        fill="#ffffff"
+        stroke="#e4e4e7"
         strokeWidth={1.5}
       />
       <text
         x={cx}
         y={plaqueY + labelHeight / 2 + 4}
         textAnchor="middle"
-        fill="#ef4444"
+        fill="#000000"
         fontSize={10}
         fontWeight={800}
         letterSpacing={1.5}
       >
-        🗑️ DIRTIEST CITY
+        ★ DIRTIEST CITY
       </text>
       <line
         x1={cx}
         y1={plaqueY + labelHeight}
         x2={cx}
         y2={y}
-        stroke="#ef4444"
+        stroke="#ffffff"
         strokeWidth={1.5}
         strokeDasharray="4 3"
       />
@@ -80,7 +78,7 @@ function renderPlaqueMobile(props: any) {
         y1={cy}
         x2={plaqueX}
         y2={cy}
-        stroke="#ef4444"
+        stroke="#ffffff"
         strokeWidth={1.5}
         strokeDasharray="4 3"
       />
@@ -90,20 +88,20 @@ function renderPlaqueMobile(props: any) {
         width={100}
         height={22}
         rx={6}
-        fill="#18181b"
-        stroke="#ef4444"
+        fill="#ffffff"
+        stroke="#e4e4e7"
         strokeWidth={1.5}
       />
       <text
         x={plaqueX + 50}
         y={cy + 4}
         textAnchor="middle"
-        fill="#ef4444"
+        fill="#000000"
         fontSize={9}
         fontWeight={800}
         letterSpacing={1.5}
       >
-        🗑️ DIRTIEST
+        ★ DIRTIEST
       </text>
     </g>
   );
