@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "DumpIndex.eu — Trashiest Cities in Europe",
   description: "Which European city is the trashiest? See the rankings.",
   icons: {
-    icon: "/favicon.svg",
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗑️</text></svg>",
   },
 };
 

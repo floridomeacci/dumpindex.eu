@@ -78,6 +78,18 @@ export default function Home() {
         The dirtiest cities in Europe, ranked.
       </p>
 
+      {cities.length > 0 && (
+        <div className="flex items-center gap-2 mb-4 px-4 py-2 bg-zinc-900/60 border border-zinc-800 rounded-lg">
+          <span className="text-lg">🗑️</span>
+          <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+            Dirtiest City
+          </span>
+          <span className="text-sm font-black text-red-400">
+            {cities[0].city}
+          </span>
+        </div>
+      )}
+
       <div className="w-full max-w-6xl h-[500px] sm:h-auto sm:flex-1 sm:min-h-0">
         <TrashChart data={cities} />
       </div>
