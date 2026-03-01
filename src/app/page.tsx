@@ -46,11 +46,15 @@ export default function Home() {
         if (Array.isArray(data) && data.length > 0 && data[0].city && data[0].score != null) {
           raw = data;
         }
-        // Format 2: { city: ["Amsterdam", "Naples", ...] } — count votes per city
+        // Format 2: { city: [...], dirtLevel: [...] } — count weighted votes per city
+        // dirtLevel 1-5 means each vote counts as that many points
         else if (data?.city && Array.isArray(data.city)) {
+          const dirtLevels: number[] = data.dirtLevel && Array.isArray(data.dirtLevel) ? data.dirtLevel : [];
           const counts: Record<string, number> = {};
-          for (const name of data.city) {
-            counts[name] = (counts[name] || 0) + 1;
+          for (let i = 0; i < data.city.length; i++) {
+            const name = data.city[i];
+            const weight = Number(dirtLevels[i]) || 1; // default to 1 if no dirtLevel
+            counts[name] = (counts[name] || 0) + weight;
           }
           raw = Object.entries(counts)
             .map(([city, score]) => ({ city, score }))
@@ -70,7 +74,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen sm:h-screen flex flex-col items-center justify-center sm:justify-start px-4 pt-12 pb-6 sm:py-6">
+    <div className="min-h-screen sm:h-screen flex flex-col items-center justify-center sm:justify-start px-4 pt-12 pb-6 sm:py-6 select-none">
       <h1 className="text-4xl sm:text-6xl font-black text-center tracking-tight mb-1 text-white">
         <span style={{ color: "#ef4444" }}>DUMPINDEX</span>.EU
       </h1>
@@ -78,7 +82,7 @@ export default function Home() {
         The dirtiest cities in Europe, ranked.
       </p>
 
-      <div className="w-full max-w-6xl h-[500px] sm:h-auto sm:flex-1 sm:min-h-0">
+      <div className="w-full max-w-6xl h-[500px] sm:h-auto sm:flex-1 sm:min-h-0 select-none" style={{ outline: 'none' }}>
         <TrashChart data={cities} />
       </div>
 

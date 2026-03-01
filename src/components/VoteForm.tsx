@@ -55,6 +55,9 @@ export default function VoteForm() {
   const [email, setEmail] = useState("");
   const [cityQuery, setCityQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [dirtLevel, setDirtLevel] = useState("Dirty");
+  const [dirtDropdownOpen, setDirtDropdownOpen] = useState(false);
+  const dirtDropdownRef = useRef<HTMLDivElement>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -113,6 +116,9 @@ export default function VoteForm() {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
         setShowSuggestions(false);
       }
+      if (dirtDropdownRef.current && !dirtDropdownRef.current.contains(e.target as Node)) {
+        setDirtDropdownOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -152,6 +158,7 @@ export default function VoteForm() {
         body: JSON.stringify({
           email,
           city: selectedCity,
+          dirtLevel: { Dirty: 1, Filthy: 2, Gross: 3, Revolting: 4, Disgusting: 5 }[dirtLevel] || 1,
           turnstileToken,
           _website: honeypot, // honeypot field
         }),
@@ -175,7 +182,7 @@ export default function VoteForm() {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="w-full sm:max-w-2xl mx-auto px-4">
+    <div className="w-full sm:max-w-4xl mx-auto px-4">
       {!submitted && !cooldown && error && (
         <p className="text-xs text-red-400/70 text-center mb-3">{error}</p>
       )}
@@ -238,7 +245,7 @@ export default function VoteForm() {
                 className="w-full px-4 py-2.5 bg-zinc-900/50 border border-zinc-800 rounded-lg text-zinc-300 text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
               />
               {showSuggestions && filtered.length > 0 && (
-                <ul className="absolute z-10 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden shadow-xl max-h-48 overflow-y-auto">
+                <ul className="absolute z-10 w-full bottom-full mb-1 bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden shadow-xl max-h-48 overflow-y-auto">
                   {filtered.map((city) => (
                     <li key={city}>
                       <button
@@ -253,9 +260,57 @@ export default function VoteForm() {
                 </ul>
               )}
               {showSuggestions && cityQuery.length > 0 && filtered.length === 0 && (
-                <div className="absolute z-10 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-zinc-600 text-sm">
+                <div className="absolute z-10 w-full bottom-full mb-1 bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-zinc-600 text-sm">
                   No matching city found.
                 </div>
+              )}
+            </div>
+
+            <div ref={dirtDropdownRef} className={`relative w-full sm:w-auto ${expanded ? "block" : "hidden"} sm:block`}>
+              <button
+                type="button"
+                onClick={() => setDirtDropdownOpen(!dirtDropdownOpen)}
+                className="w-full sm:w-[160px] px-3 py-2.5 bg-zinc-900/50 border border-zinc-800 rounded-lg text-sm focus:outline-none focus:border-zinc-600 transition-all cursor-pointer flex items-center justify-between gap-2"
+                style={{ color: "#d4d4d8" }}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="font-semibold">{dirtLevel}</span>
+                </span>
+                <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform ${dirtDropdownOpen ? "rotate-180" : ""}`}>
+                  <path d="M1 3.5L5 7.5L9 3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              {dirtDropdownOpen && (
+                <ul className="absolute z-20 w-full sm:w-[180px] bottom-full mb-1 bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden shadow-xl">
+                  {([
+                    { value: "Dirty", color: "#eab308", bar: 20 },
+                    { value: "Filthy", color: "#f97316", bar: 40 },
+                    { value: "Gross", color: "#ef4444", bar: 60 },
+                    { value: "Revolting", color: "#dc2626", bar: 80 },
+                    { value: "Disgusting", color: "#991b1b", bar: 100 },
+                  ] as const).map((opt) => (
+                    <li key={opt.value}>
+                      <button
+                        type="button"
+                        onClick={() => { setDirtLevel(opt.value); setDirtDropdownOpen(false); }}
+                        className="w-full text-left px-3 py-2 text-sm transition-colors cursor-pointer relative overflow-hidden group"
+                        style={{ color: "#d4d4d8" }}
+                      >
+                        {/* Background bar showing intensity */}
+                        <div
+                          className="absolute inset-y-0 left-0 opacity-10 group-hover:opacity-20 transition-opacity"
+                          style={{ width: `${opt.bar}%`, backgroundColor: opt.color }}
+                        />
+                        <span className="relative flex items-center gap-2">
+                          <span className="font-semibold">{opt.value}</span>
+                          {dirtLevel === opt.value && (
+                            <span className="ml-auto text-xs">✓</span>
+                          )}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
 

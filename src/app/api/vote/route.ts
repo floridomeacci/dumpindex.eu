@@ -6,7 +6,7 @@ const WEBHOOK_URL = "https://n8nfjm.org/webhook/dumpscore";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, city, turnstileToken, _website } = body;
+    const { email, city, dirtLevel, turnstileToken, _website } = body;
 
     // Honeypot check — bots fill hidden fields
     if (_website) {
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, city, ip }),
+      body: JSON.stringify({ email, city, dirtLevel, ip }),
     }).catch(() => {});
 
     return NextResponse.json({ success: true });

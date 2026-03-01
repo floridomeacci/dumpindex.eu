@@ -41,3 +41,11 @@ body {
   background: rgba(163, 230, 53, 0.3);
   color: #f4f4f5;
 }
+
+/* Prevent focus outlines on chart elements */
+.recharts-wrapper,
+.recharts-surface,
+.recharts-wrapper *:focus {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
