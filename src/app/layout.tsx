@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "DumpIndex.eu — Trashiest Cities in Europe",
   description: "Which European city is the trashiest? See the rankings.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

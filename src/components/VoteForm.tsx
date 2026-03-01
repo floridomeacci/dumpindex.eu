@@ -172,12 +172,14 @@ export default function VoteForm() {
     setSubmitted(true);
   }
 
+  const [expanded, setExpanded] = useState(false);
+
   return (
-    <div className="w-full max-w-2xl mx-auto px-4">
+    <div className="w-full sm:max-w-2xl mx-auto px-4">
       {!submitted && !cooldown && error && (
         <p className="text-xs text-red-400/70 text-center mb-3">{error}</p>
       )}
-      <div className="h-[42px] flex items-center">
+      <div className="sm:h-[42px] flex items-center">
         {submitted ? (
           <span className="text-sm font-medium text-zinc-500 tracking-wide uppercase w-full text-center">
             Voted for {selectedCity}
@@ -188,9 +190,15 @@ export default function VoteForm() {
           </span>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 items-end w-full">
-            <span className="text-sm font-medium text-zinc-500 tracking-wide uppercase whitespace-nowrap self-center">
-              Cast your vote
-            </span>
+            {/* On mobile: tappable title that toggles form. On desktop: static label */}
+            <button
+              type="button"
+              onClick={() => setExpanded(!expanded)}
+              className="text-sm font-medium text-zinc-500 tracking-wide uppercase whitespace-nowrap self-center sm:pointer-events-none sm:cursor-default cursor-pointer"
+            >
+              Cast your vote {!expanded && <span className="sm:hidden">▼</span>}
+              {expanded && <span className="sm:hidden">▲</span>}
+            </button>
 
             {/* Honeypot — hidden from humans, bots auto-fill it */}
             <input
@@ -204,7 +212,7 @@ export default function VoteForm() {
               style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }}
             />
 
-            <div className="flex-1 w-full">
+            <div className={`flex-1 w-full ${expanded ? "block" : "hidden"} sm:block`}>
               <input
                 id="email"
                 type="email"
@@ -215,7 +223,7 @@ export default function VoteForm() {
               />
             </div>
 
-            <div ref={wrapperRef} className="relative flex-1 w-full">
+            <div ref={wrapperRef} className={`relative flex-1 w-full ${expanded ? "block" : "hidden"} sm:block`}>
               <input
                 id="city"
                 type="text"
@@ -253,7 +261,7 @@ export default function VoteForm() {
 
             <button
               type="submit"
-              className="px-6 py-2.5 bg-zinc-800 text-zinc-300 text-sm font-medium rounded-lg hover:bg-zinc-700 hover:text-white active:scale-[0.98] transition-all cursor-pointer border border-zinc-700"
+              className={`w-full sm:w-auto px-6 py-2.5 bg-zinc-800 text-zinc-300 text-sm font-medium rounded-lg hover:bg-zinc-700 hover:text-white active:scale-[0.98] transition-all cursor-pointer border border-zinc-700 ${expanded ? "block" : "hidden"} sm:block`}
             >
               Vote
             </button>

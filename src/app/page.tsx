@@ -70,15 +70,15 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col items-center px-4 py-6 overflow-hidden">
+    <div className="min-h-screen sm:h-screen flex flex-col items-center justify-center sm:justify-start px-4 pt-12 pb-6 sm:py-6 sm:overflow-hidden">
       <h1 className="text-4xl sm:text-6xl font-black text-center tracking-tight mb-1 text-white">
         <span style={{ color: "#ef4444" }}>DUMPINDEX</span>.EU
       </h1>
       <p className="text-zinc-500 text-sm mb-4">
-        The trashiest cities in Europe, ranked.
+        The dirtiest cities in Europe, ranked.
       </p>
 
-      <div className="w-full max-w-6xl flex-1 min-h-0">
+      <div className="w-full max-w-6xl h-[500px] sm:h-auto sm:flex-1 sm:min-h-0">
         <TrashChart data={cities} />
       </div>
 
