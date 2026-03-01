@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  LabelList,
 } from "recharts";
 
 interface TrashChartProps {
@@ -20,6 +21,92 @@ function getBarColor(score: number): string {
   if (score >= 60) return "#f97316"; // orange
   if (score >= 40) return "#eab308"; // yellow
   return "#a3e635"; // lime
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function renderPlaque(props: any) {
+  const { x, y, width, index } = props;
+  if (index !== 0) return null;
+  const labelWidth = 120;
+  const labelHeight = 22;
+  const cx = x + width / 2;
+  const plaqueY = y - labelHeight - 28;
+  return (
+    <g>
+      <rect
+        x={cx - labelWidth / 2}
+        y={plaqueY}
+        width={labelWidth}
+        height={labelHeight}
+        rx={6}
+        fill="#18181b"
+        stroke="#ef4444"
+        strokeWidth={1.5}
+      />
+      <text
+        x={cx}
+        y={plaqueY + labelHeight / 2 + 4}
+        textAnchor="middle"
+        fill="#ef4444"
+        fontSize={10}
+        fontWeight={800}
+        letterSpacing={1.5}
+      >
+        🗑️ DIRTIEST CITY
+      </text>
+      <line
+        x1={cx}
+        y1={plaqueY + labelHeight}
+        x2={cx}
+        y2={y}
+        stroke="#ef4444"
+        strokeWidth={1.5}
+        strokeDasharray="4 3"
+      />
+    </g>
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function renderPlaqueMobile(props: any) {
+  const { x, y, width, height, index } = props;
+  if (index !== 0) return null;
+  const cy = y + height / 2;
+  const plaqueX = x + width + 20;
+  return (
+    <g>
+      <line
+        x1={x + width}
+        y1={cy}
+        x2={plaqueX}
+        y2={cy}
+        stroke="#ef4444"
+        strokeWidth={1.5}
+        strokeDasharray="4 3"
+      />
+      <rect
+        x={plaqueX}
+        y={cy - 11}
+        width={100}
+        height={22}
+        rx={6}
+        fill="#18181b"
+        stroke="#ef4444"
+        strokeWidth={1.5}
+      />
+      <text
+        x={plaqueX + 50}
+        y={cy + 4}
+        textAnchor="middle"
+        fill="#ef4444"
+        fontSize={9}
+        fontWeight={800}
+        letterSpacing={1.5}
+      >
+        🗑️ DIRTIEST
+      </text>
+    </g>
+  );
 }
 
 export default function TrashChart({ data }: TrashChartProps) {
@@ -38,7 +125,8 @@ export default function TrashChart({ data }: TrashChartProps) {
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 10, right: 30, bottom: 10, left: 5 }}
+          margin={{ top: 10, right: 140, bottom: 10, left: 5 }}
+          style={{ overflow: "visible" }}
         >
           <XAxis
             type="number"
@@ -70,6 +158,7 @@ export default function TrashChart({ data }: TrashChartProps) {
             formatter={(value: unknown) => [`${value}%`, "Dump Score"]}
           />
           <Bar dataKey="score" radius={[0, 6, 6, 0]} maxBarSize={24}>
+            <LabelList content={renderPlaqueMobile} />
             {data.map((entry, index) => (
               <Cell key={index} fill={getBarColor(entry.score)} />
             ))}
@@ -83,7 +172,8 @@ export default function TrashChart({ data }: TrashChartProps) {
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
         data={data}
-        margin={{ top: 20, right: 20, bottom: 80, left: 20 }}
+        margin={{ top: 65, right: 20, bottom: 80, left: 20 }}
+        style={{ overflow: "visible" }}
       >
         <XAxis
           dataKey="city"
@@ -121,6 +211,7 @@ export default function TrashChart({ data }: TrashChartProps) {
           formatter={(value: unknown) => [`${value}%`, "Dump Score"]}
         />
         <Bar dataKey="score" radius={[6, 6, 0, 0]} maxBarSize={50}>
+          <LabelList content={renderPlaque} />
           {data.map((entry, index) => (
             <Cell key={index} fill={getBarColor(entry.score)} />
           ))}

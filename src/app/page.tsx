@@ -70,25 +70,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen sm:h-screen flex flex-col items-center justify-center sm:justify-start px-4 pt-12 pb-6 sm:py-6 sm:overflow-hidden">
+    <div className="min-h-screen sm:h-screen flex flex-col items-center justify-center sm:justify-start px-4 pt-12 pb-6 sm:py-6">
       <h1 className="text-4xl sm:text-6xl font-black text-center tracking-tight mb-1 text-white">
         <span style={{ color: "#ef4444" }}>DUMPINDEX</span>.EU
       </h1>
       <p className="text-zinc-500 text-sm mb-4">
         The dirtiest cities in Europe, ranked.
       </p>
-
-      {cities.length > 0 && (
-        <div className="flex items-center gap-2 mb-4 px-4 py-2 bg-zinc-900/60 border border-zinc-800 rounded-lg">
-          <span className="text-lg">🗑️</span>
-          <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
-            Dirtiest City
-          </span>
-          <span className="text-sm font-black text-red-400">
-            {cities[0].city}
-          </span>
-        </div>
-      )}
 
       <div className="w-full max-w-6xl h-[500px] sm:h-auto sm:flex-1 sm:min-h-0">
         <TrashChart data={cities} />
