@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import TrashChart from "@/components/TrashChart";
 import VoteForm from "@/components/VoteForm";
 
@@ -33,45 +33,51 @@ const FALLBACK_CITIES = [
   { city: "Bratislava", score: 19 },
 ];
 
+function parseData(data: unknown): { city: string; score: number }[] {
+  let raw: { city: string; score: number }[] = [];
+
+  const d = data as Record<string, unknown>;
+  if (Array.isArray(data) && data.length > 0 && (data[0] as Record<string, unknown>).city && (data[0] as Record<string, unknown>).score != null) {
+    raw = data as { city: string; score: number }[];
+  } else if (d?.city && Array.isArray(d.city)) {
+    const dirtLevels: number[] = d.dirtLevel && Array.isArray(d.dirtLevel) ? (d.dirtLevel as number[]) : [];
+    const counts: Record<string, number> = {};
+    for (let i = 0; i < (d.city as string[]).length; i++) {
+      const name = (d.city as string[])[i];
+      const weight = Number(dirtLevels[i]) || 1;
+      counts[name] = (counts[name] || 0) + weight;
+    }
+    raw = Object.entries(counts)
+      .map(([city, score]) => ({ city, score }))
+      .sort((a, b) => b.score - a.score);
+  }
+
+  if (raw.length > 0) {
+    const max = Math.max(...raw.map((c) => c.score));
+    return raw.map((c) => ({
+      city: c.city,
+      score: max > 0 ? Math.round((c.score / max) * 100) : 0,
+    }));
+  }
+  return [];
+}
+
 export default function Home() {
   const [cities, setCities] = useState(FALLBACK_CITIES);
 
-  useEffect(() => {
+  const refreshData = useCallback(() => {
     fetch("https://n8nfjm.org/webhook/getdumps")
       .then((res) => res.json())
       .then((data) => {
-        let raw: { city: string; score: number }[] = [];
-
-        // Format 1: array of { city, score } objects
-        if (Array.isArray(data) && data.length > 0 && data[0].city && data[0].score != null) {
-          raw = data;
-        }
-        // Format 2: { city: [...], dirtLevel: [...] } — count weighted votes per city
-        // dirtLevel 1-5 means each vote counts as that many points
-        else if (data?.city && Array.isArray(data.city)) {
-          const dirtLevels: number[] = data.dirtLevel && Array.isArray(data.dirtLevel) ? data.dirtLevel : [];
-          const counts: Record<string, number> = {};
-          for (let i = 0; i < data.city.length; i++) {
-            const name = data.city[i];
-            const weight = Number(dirtLevels[i]) || 1; // default to 1 if no dirtLevel
-            counts[name] = (counts[name] || 0) + weight;
-          }
-          raw = Object.entries(counts)
-            .map(([city, score]) => ({ city, score }))
-            .sort((a, b) => b.score - a.score);
-        }
-
-        if (raw.length > 0) {
-          const max = Math.max(...raw.map((c) => c.score));
-          const normalized = raw.map((c) => ({
-            city: c.city,
-            score: max > 0 ? Math.round((c.score / max) * 100) : 0,
-          }));
-          setCities(normalized);
-        }
+        const parsed = parseData(data);
+        if (parsed.length > 0) setCities(parsed);
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
 
   return (
     <div className="min-h-screen sm:h-screen flex flex-col items-center justify-center sm:justify-start px-4 pt-12 pb-6 sm:py-6 select-none">
@@ -87,7 +93,7 @@ export default function Home() {
       </div>
 
       <div className="w-full pt-4 pb-2">
-        <VoteForm />
+        <VoteForm onVoted={refreshData} />
       </div>
     </div>
   );

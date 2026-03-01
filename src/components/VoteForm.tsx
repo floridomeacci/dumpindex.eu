@@ -51,7 +51,7 @@ function getCooldownRemaining(): number {
   return diff > 0 ? diff : 0;
 }
 
-export default function VoteForm() {
+export default function VoteForm({ onVoted }: { onVoted?: () => void }) {
   const [email, setEmail] = useState("");
   const [cityQuery, setCityQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
@@ -177,6 +177,11 @@ export default function VoteForm() {
     localStorage.setItem(COOLDOWN_KEY, String(Date.now()));
     localStorage.setItem("dumpindex_voted_city", selectedCity);
     setSubmitted(true);
+
+    // Refresh the chart after a short delay to let the webhook process
+    if (onVoted) {
+      setTimeout(onVoted, 2000);
+    }
   }
 
   const [expanded, setExpanded] = useState(false);
