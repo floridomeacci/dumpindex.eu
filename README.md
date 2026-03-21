@@ -40,16 +40,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Tech Stack
 
-<p align="center">
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=nextjs,ts,react,vercel,css" />
-  </a>
-</p>
+The tools and technologies used in this project:
+
+[![My Skills](https://skillicons.dev/icons?i=nextjs,ts,react,vercel,css)](https://skillicons.dev)
 
 ## Support
 
-<p align="center">
-  <a href="https://buymeacoffee.com/floridomeacci">
-    <img src="https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
-  </a>
-</p>
+If you found this project useful or interesting, consider buying me a coffee!
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/floridomeacci)
